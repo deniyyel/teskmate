@@ -1,10 +1,70 @@
 {% extends 'base.html' %}
 
-    {% block title %}
+{% block title %}
 
-    <title> to do list manage - Taskmaet</title>
-    {% endblock %}
+<title> to do list manage - Taskmaet</title>
+{% endblock %}
 
-    {% block content %}
-     <h1> {{ todolist_text }}</h1>
-    {% endblock content %}
+{% block content %}
+
+<div class="containe mt-2">
+    </br>
+    {%if messages%}
+        {% for message in messages %}
+            <div class="alert alert-info  alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              
+             </div>
+        {% endfor %}
+    {%endif%}    
+    <!--{{ obj.task}} | {{obj.done}}   using for loop display -->
+            <form method="post" class="row g-3 align-items-center">
+                {% csrf_token %}
+                <div class="col-auto">
+                    <label for="exampleInputEmail1" class="form-label">New Task</label>
+                </div>
+                <div class="col-8">
+                    <input type="text" class="form-control" name="task" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="new task">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </div>
+            </form>
+
+        <table class="table">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">task</th>
+                        <th scope="col">Done</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+        {% if all_task %}
+            {% for obj in all_task %}
+                {% if obj.done %}
+                <tr class="table-primary">
+                    <td>{{ obj.task }}</td>
+                    <td > Completed</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+                {%else %}
+                <tr>
+                    <td>{{ obj.task }}</td>
+                    <td>Not Completed</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+                 {% endif %}
+                {% endfor %}
+        {%endif%}        
+            </tbody>
+        </table>
+</div>
+
+
+{% endblock content %}
