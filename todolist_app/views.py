@@ -16,7 +16,18 @@ def todolist(request):
     else:
         all_task = Tasklist.objects.all # fatching all file from the models 
         return render(request, 'todolist.html', {'all_task': all_task})
-
+    
+def delete_task(reques, task_id):
+     task = Tasklist.objects.get(pk=task_id)
+     task.delete()
+     
+     return redirect('todolist')
+ 
+ 
+def edit_task(request, edit_task):
+    task = tas
+    
+     
 def contact(request):
     context ={
         'contact_text':"welcome to contact.",
