@@ -26,6 +26,10 @@ def delete_task(reques, task_id):
 def edit_task(request, task_id):
     print(f"Received request to edit task with ID: {task_id}")  # Debugging statement
     if request.method == "POST":
+        task = Tasklist.objects.get(pk=task_id)
+        form = Taskform(request.POST or None, instance=task)
+        if form.is_valid():
+            form.save()
         messages.success(request, 'Task Edited')
         return redirect('todolist')
     else:
