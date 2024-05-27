@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from todolist_app.models import Tasklist
 from todolist_app.form import Taskform
@@ -23,9 +23,15 @@ def delete_task(reques, task_id):
      
      return redirect('todolist')
  
- 
-def edit_task(request, edit_task):
-    task = tas
+def edit_task(request, task_id):
+    print(f"Received request to edit task with ID: {task_id}")  # Debugging statement
+    if request.method == "POST":
+        messages.success(request, 'Task Edited')
+        return redirect('todolist')
+    else:
+        task_obj = get_object_or_404(Tasklist, pk=task_id)
+        print(f"Fetched task: {task_obj}")  # Debugging statement
+        return render(request, 'edit.html', {'task_obj': task_obj})  # Use 'task_obj' as the context variable name
     
      
 def contact(request):
