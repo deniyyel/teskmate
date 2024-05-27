@@ -5,5 +5,21 @@
 {% endblock %}
 
 {% block content %}
-  <h1>{{ task_obj.task }}</h1>
+</br>
+  <div class="container">
+
+  <form method="post" class="row g-3 align-items-center">
+      {% csrf_token %}
+      <div class="col-auto">
+          <label for="exampleInputEmail1" class="form-label">New Task</label>
+      </div>
+      <div class="col-8">
+          <input type="text" class="form-control" name="task" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="{{ task_obj.task }}" value="{{ task_obj.task }}">
+      </div>
+      <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Update Task</button>
+      </div>
+  </form>
+</div>
+
 {% endblock content %}
