@@ -17,7 +17,7 @@ def todolist(request):
         all_task = Tasklist.objects.all # fatching all file from the models 
         return render(request, 'todolist.html', {'all_task': all_task})
     
-def delete_task(reques, task_id):
+def delete_task(request, task_id):
      task = Tasklist.objects.get(pk=task_id)
      task.delete()
      
@@ -36,6 +36,20 @@ def edit_task(request, task_id):
         task_obj = get_object_or_404(Tasklist, pk=task_id)
         print(f"Fetched task: {task_obj}")  # Debugging statement
         return render(request, 'edit.html', {'task_obj': task_obj})  # Use 'task_obj' as the context variable name
+    
+def completed_task(request, task_id):
+     task = get_object_or_404(Tasklist,pk=task_id)
+     task.done = True
+     task.save()
+     
+     return redirect('todolist')
+ 
+def pending_task(request, task_id):
+     task = get_object_or_404(Tasklist,pk=task_id)
+     task.done = False
+     task.save()
+     
+     return redirect('todolist')
     
      
 def contact(request):
