@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from todolist_app.models import Tasklist
 from todolist_app.form import Taskform
 from django.contrib import messages
-
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 def todolist(request):
@@ -14,8 +14,20 @@ def todolist(request):
         messages.success(request,('New task has been added')) 
         return redirect('todolist')
     else:
-        all_task = Tasklist.objects.all # fatching all file from the models 
-        return render(request, 'todolist.html', {'all_task': all_task})
+        all_tasks = Tasklist.objects.all()  # fetching all tasks from the models
+        paginator = Paginator(all_tasks, 5)  # Show 5 tasks per page
+        
+        page = request.GET.get('pg')
+        try:
+            tasks = paginator.page(page)
+        except PageNotAnInteger:
+            tasks = paginator.page(1)
+        except EmptyPage:
+            tasks = paginator.page(paginator.num_pages)
+        
+        return render(request, 'todolist.html', {'tasks': tasks})
+        
+        #return render(request, 'todolist.html', {'all_task': all_task})
     
 def delete_task(request, task_id):
      task = Tasklist.objects.get(pk=task_id)
