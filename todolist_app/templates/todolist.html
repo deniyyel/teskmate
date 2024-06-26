@@ -1,95 +1,128 @@
- {% extends 'base.html' %}
+{% extends 'base.html' %}
 
-        {% block title %}
-        <title> To-Do List Manager - Taskmate</title>
+{% block title %}
+<title>To-Do List Manager - Taskmate</title>
+{% endblock %}
 
-        {% endblock %}
+{% block content %}
+<div class="container mt-2">
+    <br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
-        {% block content %}
-        <div class="container mt-2">
-            <br>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
+    <form method="post" class="row g-3 align-items-center">
+        {% csrf_token %}
+        <div class="col-auto">
+            <label for="taskInput" class="form-label">New Task</label>
+        </div>
+        <div class="col-8">
+            <input type="text" class="form-control" name="task" id="taskInput" placeholder="New task">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </div>
+    </form>
 
-            <form method="post" class="row g-3 align-items-center">
-                {% csrf_token %}
-                <div class="col-auto">
-                    <label for="taskInput" class="form-label">New Task</label>
-                </div>
-                <div class="col-8">
-                    <input type="text" class="form-control" name="task" id="taskInput" placeholder="New task">
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Add Task</button>
-                </div>
-            </form>
-
-        <table class="table mt-4">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Task</th>
-                    <th scope="col">Done</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if tasks %}
-                    {% for obj in tasks %}
-                        {% if obj.done %}
-                            <tr class="table-primary">
-                                <td>{{ obj.id }} | {{ obj.task }}</td>
-                                <td><a href="{% url 'pending_task' obj.id %}">Mark this pending</a></td>
-                                <td><a href="{% url 'edit_task' obj.id %}">Edit</a></td>
-                                <td><a href="{% url 'delete_task' obj.id %}">Delete</a></td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td>{{ obj.id }} | {{ obj.task }}</td>
-                                <td><a href="{% url 'completed_task' obj.id %}">Mark this task as completed</a></td>
-                                <td><a href="{% url 'edit_task' obj.id %}">Edit</a></td>
-                                <td><a href="{% url 'delete_task' obj.id %}">Delete</a></td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="4">No tasks available.</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-end">
-                {% if tasks.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?pg={{ tasks.previous_page_number }}">Previous</a></li>
-                {% else %}
-                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                {% endif %}
-
-                {% for num in tasks.paginator.page_range %}
-                    {% if tasks.number == num %}
-                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+    <table class="table mt-4 text-center">
+        <thead class="table-dark">
+            <tr>
+                <th class="col-6">Task</th>
+                <th class="col">Done</th>
+                <th class="col">Edit</th>
+                <th class="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tasks %}
+                {% for obj in tasks %}
+                    {% if obj.done %}
+                        <tr class="table-primary">
+                            <td class="col-6">{{ obj.task }}</td>
+                            <td class="col">
+                                <a href="{% url 'pending_task' obj.id %}">
+                                    <button type="button" class="btn btn-dark">Mark this pending</button>
+                                </a>
+                            </td>
+                            <td class="col">
+                                <a href="{% url 'edit_task' obj.id %}">
+                                    <button type="button" class="btn btn-info">Edit</button>
+                                </a>
+                            </td>
+                            <td class="col">
+                                <a href="{% url 'delete_task' obj.id %}">
+                                    <button type="button" class="btn btn-danger">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
                     {% else %}
-                        <li class="page-item"><a class="page-link" href="?pg={{ num }}">{{ num }}</a></li>
+                        <tr>
+                            <td class="col-6">{{ obj.task }}</td>
+                            <td class="col">
+                                <a href="{% url 'completed_task' obj.id %}">
+                                    <button type="button" class="btn btn-dark">Mark this task as completed</button>
+                                </a>
+                            </td>
+                            <td class="col">
+                                <a href="{% url 'edit_task' obj.id %}">
+                                    <button type="button" class="btn btn-info">Edit</button>
+                                </a>
+                            </td>
+                            <td class="col">
+                                <a href="{% url 'delete_task' obj.id %}">
+                                    <button type="button" class="btn btn-danger">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
                     {% endif %}
                 {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No tasks available.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
 
-                {% if tasks.has_next %}
-                    <li class="page-item"><a class="page-link" href="?pg={{ tasks.next_page_number }}">Next</a></li>
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-end">
+            {% if tasks.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?pg={{ tasks.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for num in tasks.paginator.page_range %}
+                {% if tasks.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
                 {% else %}
-                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    <li class="page-item">
+                        <a class="page-link" href="?pg={{ num }}">{{ num }}</a>
+                    </li>
                 {% endif %}
-            </ul>
-        </nav>
-    </div>
+            {% endfor %}
 
-
+            {% if tasks.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?pg={{ tasks.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endblock %}
