@@ -23,10 +23,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include  # Import include
 from todolist_app import views
+from users_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('todolist_app.urls')),  # Include all the URL patterns from 'todolist_app.urls'
+    path('users/', include('users_app.urls')), 
     #path('',todolist_views.index, name ='index'),  # Include all the URL patterns from 'todolist_app.urls'
     #path('todolist/', include('todolist_app.urls')),  # Include all the URL patterns from 'todolist_app.urls'
 ]

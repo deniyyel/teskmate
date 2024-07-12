@@ -7,7 +7,7 @@
 {% block content %}
 </br>
   <div class="container">
-
+{% if task_obj.manage == request.user %}
   <form method="post" class="row g-3 align-items-center">
       {% csrf_token %}
       <div class="col-auto">
@@ -20,6 +20,10 @@
           <button type="submit" class="btn btn-primary">Update Task</button>
       </div>
   </form>
+  {% else %}
+  <p>  Access restricted, you do not have access to this page! </p>
+
+  {%  endif %}
 </div>
 
 {% endblock content %}
